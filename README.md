@@ -28,11 +28,50 @@ cp .env.example .env
 
 可选配置见 [.env.example](.env.example) 中的详细注释。
 
-### 2a. Docker 部署（推荐）
+### 2a. Docker Compose 部署（推荐）
+
+项目已包含 `docker-compose.yml`，直接从源码构建镜像：
 
 ```bash
 docker compose up -d --build
 ```
+
+也可以使用 Docker Hub 上的预构建镜像，无需克隆仓库。新建一个目录，创建 `docker-compose.yml`：
+
+```yaml
+services:
+  easy-hive-bot:
+    image: ch1swill/easy-hive:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-}
+```
+
+然后在同目录放好 `.env` 文件，运行：
+
+```bash
+docker compose up -d
+```
+
+更新镜像：
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+**代理说明：** 如果 Bot 需要通过宿主机代理访问 Telegram / TMDB，在 `.env` 中设置：
+
+```env
+HTTP_PROXY=http://host.docker.internal:7890
+HTTPS_PROXY=http://host.docker.internal:7890
+NO_PROXY=192.168.31.223,localhost,127.0.0.1
+```
+
+`host.docker.internal` 是 Docker Desktop 提供的宿主机地址，Linux 下需在 compose 中添加 `extra_hosts` 或使用 `network_mode: host`。
 
 ### 2b. 本地运行
 
