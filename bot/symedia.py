@@ -44,6 +44,12 @@ async def transfer_to_symedia(
         logger.exception("Symedia 请求异常")
         return False, f"请求异常: {e!s}"
 
+    # 非 2xx 直接报错（502/503 等常见于 Symedia 服务挂了或 Nginx 反代异常）
+    if r.status_code >= 400:
+        snippet = (r.text or "")[:200].replace("\n", " ")
+        logger.warning("Symedia HTTP %s: %s", r.status_code, snippet[:120])
+        return False, f"Symedia 返回 HTTP {r.status_code}，服务可能未启动或异常，请检查 Symedia 状态。"
+
     ct = (r.headers.get("content-type") or "").lower()
     head = (r.text or "").lstrip()[:500].upper()
     if "text/html" in ct or head.startswith("<!DOCTYPE") or head.startswith("<HTML"):
