@@ -16,12 +16,14 @@ async def transfer_to_symedia(
     base_url: str,
     token: str = "symedia",
     parent_id: str = "0",
-    proxy: str | None = None,
     timeout: float = 120.0,
 ) -> tuple[bool, str]:
     """
     POST {base_url}/api/v1/plugin/cloud_helper/add_share_urls_115?token={token}
     Body: {"urls": [share_url], "parent_id": parent_id}
+
+    No explicit proxy — httpx auto-detects from env vars and respects NO_PROXY,
+    so LAN Symedia instances are reached directly.
     """
     endpoint = f"{base_url.rstrip('/')}{SYMEDIA_TRANSFER_PATH}"
     params = {"token": token}
@@ -30,7 +32,7 @@ async def transfer_to_symedia(
     logger.info("Symedia 转存请求 → %s  parent_id=%s", endpoint[:120], parent_id)
 
     try:
-        async with httpx.AsyncClient(proxy=proxy, timeout=timeout) as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             r = await client.post(
                 endpoint,
                 params=params,

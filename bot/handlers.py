@@ -278,7 +278,6 @@ def setup_handlers(r: Router, settings: Settings) -> None:
             base_url=settings.symedia_base_url,
             token=settings.symedia_token,
             parent_id=settings.symedia_parent_id,
-            proxy=settings.http_proxy,
             timeout=settings.symedia_timeout,
         )
         icon = "✅" if ok else "❌"
