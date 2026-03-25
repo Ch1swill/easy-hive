@@ -1,0 +1,11 @@
+services:
+  easy-hive-bot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # 覆盖 .env 时可写在这里；影巢 API 基址在代码内固定为 https://hdhive.com/api/open
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-}

@@ -1,0 +1,11 @@
+.env
+api.md
+logs/
+.cursor/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
