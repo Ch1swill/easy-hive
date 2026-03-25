@@ -45,6 +45,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    volumes:
+      - ./logs:/app/logs
     environment:
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
